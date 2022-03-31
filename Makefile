@@ -1,0 +1,6 @@
+
+compile:
+	go build -v ./...
+
+unit_tests:
+	go test -v ./...
