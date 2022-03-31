@@ -1,0 +1,43 @@
+users:
+  - userid: jakinyele
+    name: John Akinyele
+    email: john.akinyele@gmail.com
+    role: user
+    memberships:
+      - teamid: 8774a36c-58bd-4968-82d1-a8fb4c3502bf
+        key: 2a78bc38-e679-4789-9ead-6315ec18b055
+  - userid: alphega
+    name: Alphega Solutions
+    email: alphegasolutions@gmail.com
+    role: owner
+    level: bronze
+  - userid: admin
+    name: ZBI Admin
+    email: admin@alphegasolutions.com
+    role: admin
+
+passwords:
+  jakinyele: $2a$04$HUt33hdzkNbqhautNk6KzewI.phRYi6gfTTCCU4BF8dJtEemFdA/S
+  alphega: $2a$04$C/bFWh3jyB/B9uZ9FVZ0J.Xun85rGOoq1K99DxxEtuET11xwkVNce
+  admin: $2a$04$msQyMo2MiCy/WrdkRbHsDOwb8ssFbi6nSn3E.t2jzrfujCjTOGFHq
+
+keys:
+  - key: 9664a36c-58bd-4968-82d1-a8fb4c3502bf
+    userid: jakinyele
+  - key: 87e6f3cb-82af-4917-86a3-b04b7f8f9a47
+    userid: alphega
+  - key: 2a78bc38-e679-4489-9ead-6315ec13b050
+    userid: admin
+
+teams:
+  - id: 8774a36c-58bd-4968-82d1-a8fb4c3502bf
+    name: Alphega Solutions
+    email: alphegasolutions@gmail.com
+    owner: alphega
+
+members:
+  - teamid: 8774a36c-58bd-4968-82d1-a8fb4c3502bf
+    key: 2a78bc38-e679-4789-9ead-6315ec18b055
+    email: john.akinyele@gmail.com
+    role: user
+    status: accepted

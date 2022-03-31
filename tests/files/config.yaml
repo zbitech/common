@@ -1,0 +1,52 @@
+assetsPath: /etc/zbi
+maxFileSize: 
+kubernetes:
+  inCluster: false
+  kubeConfig: /users/johnakinyele/.kube/config
+  informer:
+    requeueLimit: 10
+    requeueDelay: 10
+database:
+  factory: mongo
+  mongodb:
+    url: mongodb://root:wzZxK2YCCn@db.zbitech.local:27017
+    dbname: zbiRepo
+mailer:
+  host: www.zbitech.local
+  port: 85
+  username: admin
+  password: password
+  sender: Zcash Blockchain Infrastructure
+  templateFiles: 
+  - templates/welcome_email.tmpl
+  - templates/project_action_emai.tmpl
+  - templates/instance_action_email.tmpl
+  - templates/team_action_email.tmpl
+  - templates/team_member_action_email.tmpl
+cors:
+  trustedOrigins:
+  - api.zbitech.local
+  - www.zbitech.local
+policy:
+  imageRegistries:
+  - docker.io
+  - jakinyele
+  storageClasses:
+  - hostpath
+  domain: api.zbitech.local
+  certName: zbitech-tls
+  subscriptionPolicies:
+  - level: bronze
+    maxKeys: 1
+    maxProjects: 1
+    maxInstances: 5
+    maxTeams: 1
+    maxAPIKeys: 1
+    maxVolumeClaims: 10
+    instanceTypes:
+    - zcash
+    - lwd
+    resourceLimit:
+      maxStorage: 70Gi
+      maxCPU: 30
+      maxMemory: 20Gi
