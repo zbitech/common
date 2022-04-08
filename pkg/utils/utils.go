@@ -4,13 +4,27 @@ import (
 	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/spf13/viper"
 )
 
-func ReadConfig(path string, envKeys []string, cfg interface{}) error {
+func ReadByteConfig(in io.Reader, fileType string, cfg interface{}) error {
+	v := viper.New()
+	v.SetConfigType(fileType)
+	if err := v.ReadConfig(in); err != nil {
+		return err
+	}
 
+	if err := v.Unmarshal(&cfg); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ReadConfig(path string, envKeys []string, cfg interface{}) error {
 	v := viper.New()
 	v.SetConfigFile(path)
 	if err := v.ReadInConfig(); err != nil {
