@@ -12,7 +12,14 @@ import (
 
 type ResourceManagerFactoryIF interface {
 	Init(ctx context.Context) error
+	GetIngressResourceManager(ctx context.Context) IngressResourceManagerIF
 	GetProjectDataManager(ctx context.Context) ProjectResourceManagerIF
+}
+
+type IngressResourceManagerIF interface {
+	GetIngressResources(ctx context.Context, version string) (config.VersionedResourceConfig, bool)
+	CreateProjectIngressSpec(ctx context.Context, version string, project *entity.Project, instances []entity.Instance) ([]string, error)
+	CreateControllerIngressSpec(ctx context.Context, version string, projects []entity.Project) ([]string, error)
 }
 
 type ProjectResourceManagerIF interface {
