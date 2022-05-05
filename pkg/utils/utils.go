@@ -57,7 +57,7 @@ func GetEnv(key, fallback string) string {
 	return fallback
 }
 
-func Base64EncodedString(value string) string {
+func Base64EncodeString(value string) string {
 	return string([]byte(b64.StdEncoding.EncodeToString([]byte(value))))
 }
 
