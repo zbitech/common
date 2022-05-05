@@ -13,6 +13,7 @@ type UserTeam struct {
 type User struct {
 	UserId      string                   `json:"userid" bson:"userid"`
 	Name        string                   `json:"name" bson:"name"`
+	LastName    string                   `json:"lastname" bson:"lastname"`
 	Email       string                   `json:"email" bson:"email"`
 	Role        ztypes.Role              `json:"role" bson:"role"`
 	Memberships []UserTeam               `json:"memberships" bson:"memberships"`
@@ -32,11 +33,15 @@ func NewUserPassword(userId, password string) UserPassword {
 	return UserPassword{UserId: userId, Password: password, LastUpdate: time.Now()}
 }
 
-func NewUser(userId, name, email string, role ztypes.Role) *User {
+func NewUser(userId, name, lastName, email string, role ztypes.Role) *User {
 	user := &User{
-		UserId: userId, Name: name, Email: email,
+		UserId: userId, Name: name, LastName: lastName,
+		Email:       email,
 		Role:        role,
+		Active:      true,
 		Memberships: make([]UserTeam, 0),
+		Created:     time.Now(),
+		LastUpdate:  time.Now(),
 	}
 
 	return user
@@ -50,6 +55,15 @@ func (u *User) AddTeam(teamId, key string) {
 	}
 
 	u.Memberships = append(u.Memberships, UserTeam{TeamId: teamId, Key: key})
+}
+
+func (u *User) RemoveTeam(key string) {
+	for index, t := range u.Memberships {
+		if t.Key == key {
+			u.Memberships = append(u.Memberships[:index], u.Memberships[index+1:]...)
+			return
+		}
+	}
 }
 
 func (u *User) GetTeam(teamId string) *UserTeam {
