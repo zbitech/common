@@ -26,14 +26,14 @@ type JwtServerIF interface {
 }
 
 type IAMServiceIF interface {
-	RegisterUser(ctx context.Context, user *entity.User, pass *entity.UserPassword) error
+	RegisterUser(ctx context.Context, user *entity.User, pass string) error
 	DeactivateUser(ctx context.Context, userid string) error
 	ReactivateUser(ctx context.Context, userid string) error
 
 	GetUsers(ctx context.Context) []entity.User
 	GetUser(ctx context.Context, userId string) (*entity.User, error)
 	UpdateUser(ctx context.Context, user *entity.User) error
-	ChangePassword(ctx context.Context, userid string, pass *entity.UserPassword) error
+	ChangePassword(ctx context.Context, userid, password string) error
 
 	AuthenticateUser(ctx context.Context, userId, password string) (*string, error)
 	ValidateAuthToken(ctx context.Context, tokenString string) (jwt.Claims, *entity.User, error)
@@ -54,24 +54,26 @@ type IAMServiceIF interface {
 	GetInstanceMethodPolicy(ctx context.Context, project, instance, methodName string) (*entity.MethodPolicy, error)
 	GetInstanceMethodPolicies(ctx context.Context, project, instance, methodCategory string) ([]entity.MethodPolicy, error)
 
+	CreateRegistrationInvite(ctx context.Context, invite entity.RegistrationInvite) error
+	GetRegistrationInvite(ctx context.Context, key string) (*entity.RegistrationInvite, error)
+	GetRegistrationInvites(ctx context.Context) ([]entity.RegistrationInvite, error)
+	UpdateRegistrationInvite(ctx context.Context, invite *entity.RegistrationInvite) error
+
 	GetExpiringInvitations(ctx context.Context, date time.Time) ([]entity.TeamMember, error)
 	PurgeExpiredInvitations(ctx context.Context) (int64, error)
 
 	CreateTeam(ctx context.Context, team entity.Team) error
 	GetTeams(ctx context.Context) ([]entity.Team, error)
-	GetTeam(ctx context.Context, teamId string) (*entity.Team, error)
 
-	UpdateTeam(ctx context.Context, team entity.Team) error
+	GetTeam(ctx context.Context, teamId string) (*entity.Team, error)
+	UpdateTeam(ctx context.Context, team *entity.Team) error
 	DeleteTeam(ctx context.Context, teamId string) error
 	GetTeamByOwner(ctx context.Context, owner string) (*entity.Team, error)
+
 	GetTeamMembers(ctx context.Context, teamId string) ([]entity.TeamMember, error)
 	AddTeamMember(ctx context.Context, teamId string, member entity.TeamMember) error
-	RemoveTeamMembers(ctx context.Context, teamId string, key []string) error
 	RemoveTeamMember(ctx context.Context, teamId string, key string) error
-
-	UpdateTeamMemberEmail(ctx context.Context, teamId, key, email string) error
-	UpdateTeamMemberRole(ctx context.Context, teamId, key string, role ztypes.Role) error
-	UpdateTeamMemberStatus(ctx context.Context, teamId, key string, status ztypes.InvitationStatus) error
+	UpdateTeamMember(ctx context.Context, member *entity.TeamMember) error
 
 	GetAllMemberships(ctx context.Context) ([]entity.TeamMember, error)
 	GetTeamMemberships(ctx context.Context, email string) ([]entity.TeamMember, error)
