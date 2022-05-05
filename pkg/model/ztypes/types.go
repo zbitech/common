@@ -65,11 +65,11 @@ const (
 type SubscriptionLevel string
 
 const (
-	NO_SUB_LEVEL SubscriptionLevel = "none"
-	USER_LEVEL   SubscriptionLevel = "user"
-	GOLD_LEVEL   SubscriptionLevel = "gold"
-	SILVER_LEVEL SubscriptionLevel = "silver"
-	BRONZE_LEVEL SubscriptionLevel = "bronze"
+	NO_SUB_LEVEL      SubscriptionLevel = "none"
+	TEAM_MEMBER_LEVEL SubscriptionLevel = "team_member"
+	GOLD_LEVEL        SubscriptionLevel = "gold"
+	SILVER_LEVEL      SubscriptionLevel = "silver"
+	BRONZE_LEVEL      SubscriptionLevel = "bronze"
 )
 
 type InvitationStatus string
