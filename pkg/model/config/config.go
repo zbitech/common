@@ -18,11 +18,14 @@ type AppConfig struct {
 			RequeueDelay int
 		}
 	}
-	Database struct {
-		Factory string
-		Mongodb struct {
-			Url    string
-			Dbname string
+	Repository struct {
+		Database struct {
+			Factory string
+			Url     string
+			Name    string
+		}
+		Authentication struct {
+			Type string
 		}
 	}
 	Mailer struct {
@@ -47,6 +50,11 @@ type AdminConfig struct {
 	Members   []entity.TeamMember
 }
 
+type ServiceInfo struct {
+	Prefix    string
+	ProxyPort int32
+}
+
 type ContainerImage struct {
 	Name    string
 	Version string
@@ -56,6 +64,7 @@ type ContainerImage struct {
 
 type VersionedResourceConfig struct {
 	Version   string
+	Service   ServiceInfo
 	Images    []ContainerImage
 	Templates struct {
 		Keys []string
@@ -63,6 +72,10 @@ type VersionedResourceConfig struct {
 	}
 	Methods      map[string][]string
 	fileTemplate *object.FileTemplate
+}
+
+type IngressResourceConfig struct {
+	Versions map[string]VersionedResourceConfig
 }
 
 type InstanceResourceConfig struct {
@@ -77,6 +90,7 @@ type ProjectResourceConfig struct {
 }
 
 type ResourceConfig struct {
+	Ingress   IngressResourceConfig
 	Project   ProjectResourceConfig
 	Instances []InstanceResourceConfig
 }
