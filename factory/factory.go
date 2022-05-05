@@ -12,13 +12,13 @@ import (
 	"github.com/zbitech/common/pkg/vars"
 )
 
-func SetRepositoryFactory(ctx context.Context, f interfaces.RepositoryFactoryIF, create_db, load_db bool) {
+func SetRepositoryFactory(ctx context.Context, f interfaces.RepositoryFactoryIF) {
 	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetRepositoryFactory"), rctx.Context(rctx.StartTime, time.Now()))
 	defer logger.LogComponentTime(ctx)
 
 	logger.Infof(ctx, "Initializing Repository Factory")
 
-	err := f.Init(ctx, create_db, load_db)
+	err := f.Init(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -72,12 +72,19 @@ func InitConfig(ctx context.Context) {
 	configPath := fmt.Sprintf("%s/config.yaml", vars.ASSET_PATH_DIRECTORY)
 	logger.Infof(ctx, "Initializing application config from %s", configPath)
 
-	//	password_keys := []string{"database.mongodb.url"} //TODO - set parameters
 	if err := utils.ReadConfig(configPath, nil, &vars.AppConfig); err != nil {
 		panic(err)
 	}
-	logger.Infof(ctx, "AppConfig - %s", utils.MarshalObject(vars.AppConfig))
 
+	vars.AppConfig.Repository.Database.Factory = vars.DATABASE_FACTORY
+	vars.AppConfig.Repository.Database.Url = vars.DATABASE_URL
+	vars.AppConfig.Kubernetes.InCluster = vars.K8S_INCLUSTER
+	vars.AppConfig.Kubernetes.KubeConfig = vars.KUBECONFIG
+
+	logger.Infof(ctx, "AppConfig - %s", utils.MarshalObject(vars.AppConfig))
+}
+
+func InitProjectResourceConfig(ctx context.Context) {
 	resourcePath := fmt.Sprintf("%s/project.yaml", vars.ASSET_PATH_DIRECTORY)
 	logger.Infof(ctx, "Initializing resource config from %s", resourcePath)
 
