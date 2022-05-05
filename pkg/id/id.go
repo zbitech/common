@@ -2,6 +2,7 @@ package id
 
 import (
 	"github.com/google/uuid"
+	"github.com/sethvargo/go-password/password"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,7 +18,7 @@ func GenerateTeamID() string {
 	return uuid.New().String()
 }
 
-func GenerateTeamMemberKey() string {
+func GenerateKey() string {
 	return uuid.New().String()
 }
 
@@ -26,7 +27,12 @@ func GenerateUserName() string {
 }
 
 func GenerateSecurePassword() string {
-	return "password"
+	passwd, err := password.Generate(16, 4, 4, false, false)
+	if err != nil {
+		return "password"
+	}
+
+	return passwd
 }
 
 func HashAndSaltPassword(pwd []byte) (string, error) {
