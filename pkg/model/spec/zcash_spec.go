@@ -10,6 +10,7 @@ type ZcashNodeInstanceSpec struct {
 	InstanceSpec
 	Username          string
 	Password          string
+	Authentication    string
 	ZcashConf         string
 	ZcashImage        string
 	MetricsImage      string
