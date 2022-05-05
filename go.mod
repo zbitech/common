@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	github.com/sethvargo/go-password v0.2.0
 	github.com/spf13/viper v1.10.1
 	gopkg.in/mail.v2 v2.3.1
 )
