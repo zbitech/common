@@ -33,11 +33,12 @@ func NewUserPassword(userId, password string) UserPassword {
 	return UserPassword{UserId: userId, Password: password, LastUpdate: time.Now()}
 }
 
-func NewUser(userId, name, lastName, email string, role ztypes.Role) *User {
+func NewUser(userId, name, lastName, email string, role ztypes.Role, level ztypes.SubscriptionLevel) *User {
 	user := &User{
 		UserId: userId, Name: name, LastName: lastName,
 		Email:       email,
 		Role:        role,
+		Level:       level,
 		Active:      true,
 		Memberships: make([]UserTeam, 0),
 		Created:     time.Now(),
