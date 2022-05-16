@@ -29,7 +29,7 @@ func ValidateAuthorizationToken(ctx context.Context, authorization string) (jwt.
 		return nil, nil, errs.ErrInvalidAuthMethod
 	}
 
-	iamSvc := vars.AuthorizationFactory.GetIAMService()
+	iamSvc := vars.IAMFactory.GetIAMService()
 	claims, user, err := iamSvc.ValidateAuthToken(ctx, credentials) // tokenVerifier.ParseWithClaims(credentials)
 
 	if err != nil {
