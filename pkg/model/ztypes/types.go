@@ -38,6 +38,8 @@ const (
 	PERSISTENT_VOLUME_RESOURCE       ResourceObjectType = "PersistentVolume"
 	PERSISTENT_VOLUME_CLAIM_RESOURCE ResourceObjectType = "PersistentVolumeClaim"
 	VOLUME_SNAPHOT_RESOURCE          ResourceObjectType = "VolumeSnapshot"
+	SNAPSHOT_SCHEDULE_RESOURCE       ResourceObjectType = "SnapshotSchedule"
+	INGRESS_RESOURCE                 ResourceObjectType = "HTTPProxy"
 )
 
 type NetworkType string
