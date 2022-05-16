@@ -23,6 +23,9 @@ func SetRepositoryFactory(ctx context.Context, f interfaces.RepositoryFactoryIF)
 		panic(err)
 	}
 
+	logger.Debugf(ctx, "Project Repo - %v", f.GetProjectRepository())
+	logger.Debugf(ctx, "Admin Repo - %v", f.GetAdminRepository())
+
 	vars.RepositoryFactory = f
 }
 
@@ -36,6 +39,9 @@ func SetManagerFactory(ctx context.Context, f interfaces.ResourceManagerFactoryI
 	if err != nil {
 		panic(err)
 	}
+
+	logger.Debugf(ctx, "Ingress Resource Manager - %v", f.GetIngressResourceManager(ctx))
+	logger.Debugf(ctx, "Project Resource Manager - %v", f.GetProjectDataManager(ctx))
 
 	vars.ManagerFactory = f
 }
@@ -51,20 +57,39 @@ func SetKubernetesFactory(ctx context.Context, f interfaces.KlientFactoryIF) {
 		panic(err)
 	}
 
+	logger.Debugf(ctx, "ZBI Client - %v", f.GetZBIClient())
+	//	logger.Debugf(ctx, "Kubernetes Client - %v", f.GetKubernesClient())
+
 	vars.KlientFactory = f
 }
 
-func SetAuthorizerFactory(ctx context.Context, f interfaces.AuthorizationFactoryIF) {
-	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetAuthorizerFactory"), rctx.Context(rctx.StartTime, time.Now()))
+func SetIAMFactory(ctx context.Context, f interfaces.IAMFactoryIF) {
+	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetIAMFactory"), rctx.Context(rctx.StartTime, time.Now()))
 	defer logger.LogComponentTime(ctx)
 
-	logger.Infof(ctx, "Initializing Authorizer Factory")
+	logger.Infof(ctx, "Initializing IAM Factory")
 	err := f.Init(ctx)
 	if err != nil {
 		panic(err)
 	}
 
-	vars.AuthorizationFactory = f
+	logger.Debugf(ctx, "IAM - %v", f.GetIAMService())
+	logger.Debugf(ctx, "JWT - %v", f.GetJwtServer())
+	vars.IAMFactory = f
+}
+
+func SetAccessAuthorizerFactory(ctx context.Context, f interfaces.AccessAuthorizerFactoryIF) {
+	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetAccessAuthorizerFactory"), rctx.Context(rctx.StartTime, time.Now()))
+	defer logger.LogComponentTime(ctx)
+
+	logger.Infof(ctx, "Initializing Access Authorizer Factory")
+	err := f.Init(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	logger.Debugf(ctx, "Authorizer Service - %v", f.GetAccessAuthorizer())
+	vars.AuthorizerFactory = f
 }
 
 func InitConfig(ctx context.Context) {

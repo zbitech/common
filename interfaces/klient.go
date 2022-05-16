@@ -2,7 +2,6 @@ package interfaces
 
 import (
 	"context"
-
 	"github.com/zbitech/common/pkg/model/entity"
 	"github.com/zbitech/common/pkg/model/object"
 	"github.com/zbitech/common/pkg/model/ztypes"
@@ -22,7 +21,7 @@ type KlientFactoryIF interface {
 }
 
 type ZBIClientIF interface {
-	RunInformer()
+	RunInformer(ctx context.Context)
 
 	CreateProject(ctx context.Context, request *object.ProjectRequest) (*entity.Project, error)
 	CreateProjectIngress(ctx context.Context, project *entity.Project, instance *entity.Instance) error
@@ -38,6 +37,7 @@ type ZBIClientIF interface {
 	CreateInstance(ctx context.Context, project *entity.Project, request ztypes.InstanceRequestIF) (*entity.Instance, error)
 	UpdateInstance(ctx context.Context, project *entity.Project, instance *entity.Instance, request ztypes.InstanceRequestIF) (*entity.Instance, error)
 	DeleteInstance(ctx context.Context, projectName, instanceName string) error
+
 	GetAllInstances(ctx context.Context) ([]entity.Instance, error)
 	GetInstancesByProject(ctx context.Context, projectName string) ([]entity.Instance, error)
 	GetInstancesByOwner(ctx context.Context, owner string) ([]entity.Instance, error)
@@ -50,7 +50,7 @@ type KlientIF interface {
 	GetGVR(gvk schema.GroupVersionKind) (*schema.GroupVersionResource, error)
 
 	GetResource(object *unstructured.Unstructured) *entity.KubernetesResource
-	GenerateKubernetesObjects(ctx context.Context, spec_arr []string) ([]*unstructured.Unstructured, error)
+	GenerateKubernetesObjects(ctx context.Context, spec_arr []string) ([]*unstructured.Unstructured, []*schema.GroupVersionKind, error)
 
 	DeleteDynamicResource(ctx context.Context, namespace, name string, resource schema.GroupVersionResource) error
 	DeleteNamespace(ctx context.Context, namespace string) error
@@ -87,4 +87,12 @@ type KlientIF interface {
 
 	GetPersistentVolumeClaimByName(ctx context.Context, namespace, name string) (*corev1.PersistentVolumeClaim, error)
 	GetPersistentVolumeClaims(ctx context.Context, namespace string, labels map[string]string) ([]corev1.PersistentVolumeClaim, error)
+
+	GetVolumeSnapshot(ctx context.Context, namespace, name string) (*unstructured.Unstructured, error)
+	GetVolumeSnapshots(ctx context.Context, namespace string, labels map[string]string) ([]unstructured.Unstructured, error)
+
+	GetSnapshotSchedule(ctx context.Context, namespace, name string) (*unstructured.Unstructured, error)
+	GetSnapshotSchedules(ctx context.Context, namespace string, labels map[string]string) ([]unstructured.Unstructured, error)
+
+	GetIngress(ctx context.Context, namespace, name string) (*unstructured.Unstructured, error)
 }

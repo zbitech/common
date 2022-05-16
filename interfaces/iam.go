@@ -9,11 +9,15 @@ import (
 	"github.com/zbitech/common/pkg/model/ztypes"
 )
 
-type AuthorizationFactoryIF interface {
+type IAMFactoryIF interface {
 	Init(ctx context.Context) error
 	GetJwtServer() JwtServerIF
-	GetAccessAuthorizer() AccessAuthorizerIF
 	GetIAMService() IAMServiceIF
+}
+
+type AccessAuthorizerFactoryIF interface {
+	Init(ctx context.Context) error
+	GetAccessAuthorizer() AccessAuthorizerIF
 }
 
 type JwtServerIF interface {
