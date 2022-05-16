@@ -51,6 +51,8 @@ var (
 	ErrInstanceResourceFailed error = errors.New("Instance Resource manager failed")
 	ErrInstanceDataFailed     error = errors.New("Instance Data manager failed")
 
+	ErrIngressResourceFailed error = errors.New("Ingress Resource manager failed")
+
 	ErrKubernetesConnFailed     error = errors.New("Kubernetes connection failed")
 	ErrKubernetesResourceFailed error = errors.New("Kubernetes resource failed")
 )
