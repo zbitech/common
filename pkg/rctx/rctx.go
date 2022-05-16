@@ -48,7 +48,7 @@ func GetCurrentUser(ctx context.Context) *object.CurrentUser {
 		return object.GetAnonymousUser()
 	}
 
-	jwtServer := vars.AuthorizationFactory.GetJwtServer()
+	jwtServer := vars.IAMFactory.GetJwtServer()
 
 	userid := jwtServer.GetUserId(claims)
 	email := jwtServer.GetEmail(claims)
