@@ -46,13 +46,13 @@ func (c CurrentUser) GetEmail() string {
 }
 
 func (c CurrentUser) IsAdmin() bool {
-	return c.Role == ztypes.ADMIN_ROLE
+	return c.Role == ztypes.RoleAdmin
 }
 
 func (c CurrentUser) IsOwner() bool {
-	return c.Role == ztypes.OWNER_ROLE
+	return c.Role == ztypes.RoleOwner
 }
 
 func (c CurrentUser) IsUser() bool {
-	return c.Role == ztypes.USER_ROLE
+	return c.Role == ztypes.RoleUser
 }

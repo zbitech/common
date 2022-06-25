@@ -10,4 +10,13 @@ type ProjectRequest struct {
 	Name        string             `json:"name" validate:"required"`
 	Team        string             `json:"team"`
 	Description string             `json:"description" validate:"required"`
+	owner       string
+}
+
+func (req *ProjectRequest) SetOwner(owner string) {
+	req.owner = owner
+}
+
+func (req *ProjectRequest) GetOwner() string {
+	return req.owner
 }

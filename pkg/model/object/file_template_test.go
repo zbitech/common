@@ -1,6 +1,8 @@
 package object
 
-import "testing"
+import (
+	"testing"
+)
 
 var (
 	content = `

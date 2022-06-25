@@ -23,10 +23,10 @@ func NewZcashConf(network ztypes.NetworkType, txIndex bool, miner bool) *ZcashNo
 	}
 
 	switch network {
-	case ztypes.TESTNET_TYPE:
+	case ztypes.NetworkTypeTest:
 		conf.setProperty("testnet", "1")
 		conf.setList("addnodes", ztypes.TESTNET)
-	case ztypes.MAINNET_TYPE:
+	case ztypes.NetworkTypeMain:
 		conf.setProperty("testnet", "0")
 		conf.setList("addnodes", ztypes.MAINNET)
 	}
@@ -170,7 +170,7 @@ func (z *ZcashNodeConf) UnmarshalJSON(data []byte) error {
 
 // func (z *ZcashNodeConf) UnmarshalBSON(data []byte) error {
 
-// 	conf := NewZcashConf(ztypes.MAINNET_TYPE, false, false)
+// 	conf := NewZcashConf(ztypes.NetworkTypeMain, false, false)
 
 // 	values := map[string]interface{}{}
 // 	err := bson.Unmarshal(data, &values)
