@@ -19,13 +19,13 @@ type Mailer struct {
 	mail_tmpl []object.FileTemplate
 }
 
-func New(host string, port int, username, password, sender string, template_files []string) (*Mailer, error) {
+func NewMailer(host string, port int, username, password, sender string, template_files []string) (*Mailer, error) {
 	dialer := mail.NewDialer(host, port, username, password)
 	dialer.Timeout = 5 * time.Second
 	mail_tmpl := make([]object.FileTemplate, len(template_files))
 
 	for index, template_file := range template_files {
-		tmpl, err := object.NewFileTemplate(template_file)
+		tmpl, err := object.NewFileTemplate(template_file, object.NO_FUNCS)
 		if err != nil {
 			return nil, err
 		}
