@@ -19,12 +19,12 @@ type TeamMember struct {
 
 func NewTeamMember(teamId, key, email string, admin bool) TeamMember {
 	mbr := TeamMember{TeamId: teamId, Email: email, Key: key,
-		Status: ztypes.NEW_INVITATION, CreatedOn: time.Now(), ExpiresOn: time.Now().Add(time.Hour * 168)}
+		Status: ztypes.InvitationPending, CreatedOn: time.Now(), ExpiresOn: time.Now().Add(time.Hour * 168)}
 
 	if admin {
-		mbr.Role = ztypes.ADMIN_ROLE
+		mbr.Role = ztypes.RoleAdmin
 	} else {
-		mbr.Role = ztypes.USER_ROLE
+		mbr.Role = ztypes.RoleUser
 	}
 
 	return mbr
@@ -32,33 +32,33 @@ func NewTeamMember(teamId, key, email string, admin bool) TeamMember {
 
 func (m *TeamMember) SetAdmin(admin bool) {
 	if admin {
-		m.Role = ztypes.ADMIN_ROLE
+		m.Role = ztypes.RoleAdmin
 	} else {
-		m.Role = ztypes.USER_ROLE
+		m.Role = ztypes.RoleUser
 	}
 }
 
 func (m *TeamMember) Accept() {
-	m.Status = ztypes.ACCEPT_INVITATION
+	m.Status = ztypes.InvitationAccept
 	m.LastUpdate = time.Now()
 }
 
 func (m *TeamMember) Reject() {
-	m.Status = ztypes.REJECT_INVITATION
+	m.Status = ztypes.InvitationReject
 	m.LastUpdate = time.Now()
 }
 
 func (m *TeamMember) Expire() {
-	m.Status = ztypes.EXPIRED_INVITATION
+	m.Status = ztypes.InvitationExpired
 	m.LastUpdate = time.Now()
 }
 
 func (m *TeamMember) IsJoined() bool {
-	return m.Status == ztypes.ACCEPT_INVITATION
+	return m.Status == ztypes.InvitationAccept
 }
 
 func (m *TeamMember) IsAdmin() bool {
-	return m.Role == ztypes.ADMIN_ROLE
+	return m.Role == ztypes.RoleAdmin
 }
 
 func (m *TeamMember) IsExpired() bool {

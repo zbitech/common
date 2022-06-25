@@ -27,7 +27,7 @@ func NewRegistrationInvite(email string, role ztypes.Role, level ztypes.Subscrip
 		Key:        id.GenerateKey(),
 		Email:      email,
 		Role:       role,
-		Status:     ztypes.NEW_INVITATION,
+		Status:     ztypes.InvitationPending,
 		Level:      level,
 		Created:    time.Now(),
 		LastUpdate: time.Now(),
@@ -39,25 +39,25 @@ func NewTeamMemberRegistrationInvite(email string, role ztypes.Role) Registratio
 		Key:        id.GenerateKey(),
 		Email:      email,
 		Role:       role,
-		Status:     ztypes.NEW_INVITATION,
-		Level:      ztypes.TEAM_MEMBER_LEVEL,
+		Status:     ztypes.InvitationPending,
+		Level:      ztypes.SubscriptionTeamMember,
 		Created:    time.Now(),
 		LastUpdate: time.Now(),
 	}
 }
 
 func (i *RegistrationInvite) Accept() {
-	i.Status = ztypes.ACCEPT_INVITATION
+	i.Status = ztypes.InvitationAccept
 	i.LastUpdate = time.Now()
 }
 
 func (i *RegistrationInvite) Reject() {
-	i.Status = ztypes.REJECT_INVITATION
+	i.Status = ztypes.InvitationReject
 	i.LastUpdate = time.Now()
 }
 
 func (i *RegistrationInvite) Expire() {
-	i.Status = ztypes.EXPIRED_INVITATION
+	i.Status = ztypes.InvitationExpired
 	i.LastUpdate = time.Now()
 }
 

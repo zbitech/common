@@ -7,22 +7,18 @@ import (
 	"github.com/zbitech/common/pkg/model/ztypes"
 )
 
-//type InstanceSummary struct {
-//	Name              string `json:"name"`
-//	Version           string `json:"version"`
-//	TotalVolumeClaims int    `json:"totalVolumeClaims"`
-//	TotalStorage      int    `json:"totalStorage"`
-//}
-
 type Project struct {
 	Name        string             `json:"name"`
 	Description string             `json:"description"`
 	Version     string             `json:"version"`
 	Network     ztypes.NetworkType `json:"network"`
 	Owner       string             `json:"owner"`
-	Status      string             `json:"status"`
+	Status      ztypes.StatusType  `json:"status"`
 	Timestamp   time.Time          `json:"timestamp"`
 	TeamId      string             `json:"team"`
+	Action      string             `json:"action"`
+	ActionTime  time.Time          `json:"actionTime"`
+	Age         string             `json:"age"`
 }
 
 //func (p *Project) AddInstance(inst InstanceSummary) {
@@ -41,11 +37,11 @@ func (p *Project) SetOwner(owner string) {
 	p.Owner = owner
 }
 
-func (p Project) GetStatus() string {
+func (p Project) GetStatus() ztypes.StatusType {
 	return p.Status
 }
 
-func (p *Project) SetStatus(status string) {
+func (p *Project) SetStatus(status ztypes.StatusType) {
 	p.Status = status
 }
 

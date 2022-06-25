@@ -1,9 +1,11 @@
 package entity
 
 type ZcashInstanceDetail struct {
-	TransactionIndex bool     `json:"transactionIndex"`
-	Miner            bool     `json:"miner"`
-	Peers            []string `json:"peers"`
+	TransactionIndex bool       `json:"transactionIndex"`
+	Miner            bool       `json:"miner"`
+	Peers            []string   `json:"peers"`
+	DataVolume       DataVolume `json:"dataVolume"`
+	ParamsVolume     DataVolume `json:"paramsVolume"`
 }
 
 // func (z *ZcashInstanceDetail) GetName() string {

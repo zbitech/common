@@ -7,7 +7,7 @@ type LWDInstanceDetail struct {
 	// Network      ztypes.NetworkType  `json:"network"`
 	// Description  string              `json:"description"`
 	// Owner        string              `json:"owner"`
-	// Status       string              `json:"status"`
+	// Object       string              `json:"status"`
 	// Timestamp    time.Time           `json:"timestamp"`
 	// InstanceType ztypes.InstanceType `json:"type"`
 
