@@ -12,15 +12,16 @@ var (
 	ErrDBItemUpdateFailed error = errors.New("Item update failed")
 	ErrDBItemInsertFailed error = errors.New("Item insert failed")
 	ErrDBItemDeleteFailed error = errors.New("Item delete failed")
-	ErrDBKeyAlreadyExists error = errors.New("database item key already exists")
+	ErrDBKeyAlreadyExists error = errors.New("repo item key already exists")
 
-	ErrUserNotAuth       error = errors.New("User not authenticated")
-	ErrAuthFailed        error = errors.New("Authentication failed")
-	ErrInvalidAuthMethod error = errors.New("Invalid authentication method")
-	ErrTokenValidation   error = errors.New("Token validation error")
-	ErrInvalidToken      error = errors.New("Invalid Authentication token")
-	ErrExpiredToken      error = errors.New("Authentication Token expired")
-	ErrUnregisteredUser  error = errors.New("user is not registered")
+	ErrUserNotAuth         error = errors.New("User not authenticated")
+	ErrAuthFailed          error = errors.New("Authentication failed")
+	ErrInvalidAuthMethod   error = errors.New("Invalid authentication method")
+	ErrTokenValidation     error = errors.New("Token validation error")
+	ErrInvalidToken        error = errors.New("Invalid Authentication token")
+	ErrExpiredToken        error = errors.New("Authentication Token expired")
+	ErrUnregisteredUser    error = errors.New("user is not registered")
+	ErrRegistrationFailure error = errors.New("user registration failed")
 
 	ErrMaxProjectsCreated  error = errors.New("Max projects already created")
 	ErrMaxInstancesCreated error = errors.New("Max instances already created")
@@ -51,7 +52,7 @@ var (
 	ErrInstanceResourceFailed error = errors.New("Instance Resource manager failed")
 	ErrInstanceDataFailed     error = errors.New("Instance Data manager failed")
 
-	ErrIngressResourceFailed error = errors.New("Ingress Resource manager failed")
+	ErrIngressResourceFailed error = errors.New("App Resource manager failed")
 
 	ErrKubernetesConnFailed     error = errors.New("Kubernetes connection failed")
 	ErrKubernetesResourceFailed error = errors.New("Kubernetes resource failed")
