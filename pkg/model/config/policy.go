@@ -9,12 +9,18 @@ type ResourcePolicy struct {
 }
 
 type GlobalPolicy struct {
-	ImageRegistries      []string             `json:"imageRegistries"`
-	StorageClasses       []string             `json:"storageClasses"`
-	Domain               string               `json:"domain"`
-	CertName             string               `json:"certName"`
-	ServiceAccount       string               `json:"serviceAccount"`
-	SubscriptionPolicies []SubscriptionPolicy `json:"subscriptionPolicies"`
+	ImageRegistries       []string              `json:"imageRegistries"`
+	TokenExpirationPolicy int                   `json:"tokenExpirationPolicy"`
+	Domain                string                `json:"domain"`
+	CertName              string                `json:"certName"`
+	ServiceAccount        string                `json:"serviceAccount"`
+	NetworkTypes          []ztypes.NetworkType  `json:"networkTypes"`
+	InstanceTypes         []ztypes.InstanceType `json:"instanceTypes"`
+	StorageClass          string                `json:"storageClass"`
+	SnapshotClass         string                `json:"snapshotClass"`
+	MaxBackupCount        int                   `json:"maxBackupCount"`
+	BackupExpiration      string                `json:"backupExpiration"`
+	SubscriptionPolicies  []SubscriptionPolicy  `json:"subscriptionPolicies"`
 }
 
 type SubscriptionPolicy struct {
@@ -26,6 +32,7 @@ type SubscriptionPolicy struct {
 	MaxAPIKeys      int                      `json:"maxAPIKeys"`
 	MaxVolumeClaims int                      `json:"maxVolumeClaims"`
 	ResourceLimit   ResourcePolicy           `json:"resourceLimit"`
+	NetworkTypes    []ztypes.NetworkType     `json:"networkTypes"`
 	InstanceTypes   []ztypes.InstanceType    `json:"instanceTypes"`
 }
 

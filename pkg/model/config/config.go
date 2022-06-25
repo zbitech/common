@@ -5,12 +5,21 @@ import (
 	"github.com/zbitech/common/pkg/model/entity"
 	"github.com/zbitech/common/pkg/model/object"
 	"github.com/zbitech/common/pkg/model/ztypes"
+	"text/template"
 )
 
 type AppConfig struct {
 	AssetsPath  string
 	MaxFileSize int
-	Kubernetes  struct {
+	Features    struct {
+		EmailServiceEnabled        bool
+		RegistrationInviteEnabled  bool
+		CreateAdminUser            bool
+		AccessAuthorizationEnabled bool
+		TeamsEnabled               bool
+		ApiKeysEnabled             bool
+	}
+	Kubernetes struct {
 		InCluster  bool
 		KubeConfig string
 		Informer   struct {
@@ -27,6 +36,9 @@ type AppConfig struct {
 		Authentication struct {
 			Type string
 		}
+		JwtConfig struct {
+			SecretKey string
+		}
 	}
 	Mailer struct {
 		Host          string
@@ -39,6 +51,7 @@ type AppConfig struct {
 	Cors struct {
 		TrustedOrigins []string
 	}
+	Envoy  EnvoyConfig
 	Policy GlobalPolicy
 }
 
@@ -48,6 +61,17 @@ type AdminConfig struct {
 	Passwords map[string]string
 	Teams     []entity.Team
 	Members   []entity.TeamMember
+}
+
+type EnvoyConfig struct {
+	Image                 string
+	Command               []string
+	Timeout               float32
+	AccessAuthorization   bool
+	AuthServerURL         string
+	AuthServerPort        int32
+	AuthenticationEnabled bool
+	AuthenticationMethod  string
 }
 
 type ServiceInfo struct {
@@ -63,50 +87,76 @@ type ContainerImage struct {
 }
 
 type VersionedResourceConfig struct {
-	Version   string
-	Service   ServiceInfo
-	Images    []ContainerImage
-	Templates struct {
-		Keys []string
-		File string
-	}
-	Methods      map[string][]string
+	Version   string           `json:"version,omitempty"`
+	Service   *ServiceInfo     `json:"service,omitempty"`
+	Images    []ContainerImage `json:"images,omitempty"`
+	Templates *struct {
+		ActionKeys map[string][]string
+		Keys       []string
+		File       string
+	} `json:"templates,omitempty"`
+	Methods      map[string][]string `json:"methods,omitempty"`
+	Volumes      []string            `json:"volumes,omitempty"`
 	fileTemplate *object.FileTemplate
 }
 
-type IngressResourceConfig struct {
-	Versions map[string]VersionedResourceConfig
+type AppResourceConfig struct {
+	Version  string
+	Versions map[string]*VersionedResourceConfig
 }
 
 type InstanceResourceConfig struct {
 	Name     string
 	Type     string
-	Versions map[string]VersionedResourceConfig
+	Ports    map[string]int32
+	Versions map[string]*VersionedResourceConfig
 }
 
 type ProjectResourceConfig struct {
 	Name     string
-	Versions map[string]VersionedResourceConfig
+	Versions map[string]*VersionedResourceConfig
 }
 
 type ResourceConfig struct {
-	Ingress   IngressResourceConfig
-	Project   ProjectResourceConfig
-	Instances []InstanceResourceConfig
+	App       *AppResourceConfig       `json:"app,omitempty"`
+	Project   *ProjectResourceConfig   `json:"project,omitempty"`
+	Instances []InstanceResourceConfig `json:"instances,omitempty"`
 }
 
-func (v *VersionedResourceConfig) GetFileTemplate(path string) (*object.FileTemplate, error) {
-	if v.fileTemplate == nil {
-		path := fmt.Sprintf("%s/%s", path, v.Templates.File)
-		f, err := object.NewFileTemplate(path)
-		if err != nil {
-			return nil, err
-		}
+func (r *ResourceConfig) getVersions(versions map[string]*VersionedResourceConfig) []string {
+	list := make([]string, 0, len(versions))
+	for k, _ := range versions {
+		list = append(list, k)
+	}
+	return list
+}
 
-		v.fileTemplate = f
+func (r *ResourceConfig) GetProjectVersions() []string {
+	return r.getVersions(r.Project.Versions)
+}
+
+func (r *ResourceConfig) GetInstanceVersions(iType ztypes.InstanceType) []string {
+	instance, ok := r.GetInstanceResourceConfig(iType)
+	if !ok {
+		return []string{}
 	}
 
-	return v.fileTemplate, nil
+	return r.getVersions(instance.Versions)
+}
+
+func (v *VersionedResourceConfig) Init(path string, fmap template.FuncMap) error {
+	filePath := fmt.Sprintf("%s/%s", path, v.Templates.File)
+	f, err := object.NewFileTemplate(filePath, fmap)
+	if err != nil {
+		return err
+	}
+
+	v.fileTemplate = f
+	return nil
+}
+
+func (v *VersionedResourceConfig) GetFileTemplate() *object.FileTemplate {
+	return v.fileTemplate
 }
 
 func (v *VersionedResourceConfig) GetImage(name string) *ContainerImage {
