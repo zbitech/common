@@ -22,6 +22,10 @@ const (
 	User      ContextParam = "User"
 )
 
+var (
+	CTX = BuildContext(context.Background(), Context(RequestId, "zbi"), Context(Component, "zbi"))
+)
+
 func Context(key ContextParam, value interface{}) ContextFn {
 	return func(ctx context.Context) context.Context {
 		return context.WithValue(ctx, key, value)
@@ -48,7 +52,7 @@ func GetCurrentUser(ctx context.Context) *object.CurrentUser {
 		return object.GetAnonymousUser()
 	}
 
-	jwtServer := vars.IAMFactory.GetJwtServer()
+	jwtServer := vars.ServiceFactory.GetJwtServer()
 
 	userid := jwtServer.GetUserId(claims)
 	email := jwtServer.GetEmail(claims)
