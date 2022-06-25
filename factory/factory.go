@@ -3,6 +3,7 @@ package factory
 import (
 	"context"
 	"fmt"
+	"github.com/zbitech/common/pkg/model/ztypes"
 	"time"
 
 	"github.com/zbitech/common/interfaces"
@@ -12,22 +13,22 @@ import (
 	"github.com/zbitech/common/pkg/vars"
 )
 
-func SetRepositoryFactory(ctx context.Context, f interfaces.RepositoryFactoryIF) {
-	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetRepositoryFactory"), rctx.Context(rctx.StartTime, time.Now()))
-	defer logger.LogComponentTime(ctx)
-
-	logger.Infof(ctx, "Initializing Repository Factory")
-
-	err := f.Init(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	logger.Debugf(ctx, "Project Repo - %v", f.GetProjectRepository())
-	logger.Debugf(ctx, "Admin Repo - %v", f.GetAdminRepository())
-
-	vars.RepositoryFactory = f
-}
+//func SetRepositoryFactory(ctx context.Context, f interfaces.RepositoryFactoryIF) {
+//	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetRepositoryFactory"), rctx.Context(rctx.StartTime, time.Now()))
+//	defer logger.LogComponentTime(ctx)
+//
+//	logger.Infof(ctx, "Initializing Repository Factory")
+//
+//	err := f.Init(ctx)
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	logger.Debugf(ctx, "Project Repo - %v", f.GetProjectRepository())
+//	logger.Debugf(ctx, "Admin Repo - %v", f.GetAdminRepository())
+//
+//	vars.RepositoryFactory = f
+//}
 
 func SetManagerFactory(ctx context.Context, f interfaces.ResourceManagerFactoryIF) {
 	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetManagerFactory"), rctx.Context(rctx.StartTime, time.Now()))
@@ -40,31 +41,31 @@ func SetManagerFactory(ctx context.Context, f interfaces.ResourceManagerFactoryI
 		panic(err)
 	}
 
-	logger.Debugf(ctx, "Ingress Resource Manager - %v", f.GetIngressResourceManager(ctx))
-	logger.Debugf(ctx, "Project Resource Manager - %v", f.GetProjectDataManager(ctx))
+	//	logger.Debugf(ctx, "App Resource Manager - %v", f.GetAppResourceManager(ctx))
+	//	logger.Debugf(ctx, "Project Resource Manager - %v", f.GetProjectDataManager(ctx))
 
 	vars.ManagerFactory = f
 }
 
-func SetKubernetesFactory(ctx context.Context, f interfaces.KlientFactoryIF) {
+func SetKubernetesFactory(ctx context.Context, f interfaces.KlientFactoryIF, namespace string, rtypes ...ztypes.ResourceObjectType) {
 	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetKubernetesFactory"), rctx.Context(rctx.StartTime, time.Now()))
 	defer logger.LogComponentTime(ctx)
 
 	logger.Infof(ctx, "Initializing Kubernetes Factory")
 
-	err := f.Init(ctx)
+	err := f.Init(ctx, namespace, rtypes...)
 	if err != nil {
 		panic(err)
 	}
 
-	logger.Debugf(ctx, "ZBI Client - %v", f.GetZBIClient())
+	//	logger.Debugf(ctx, "ZBI Client - %v", f.GetZBIClient())
 	//	logger.Debugf(ctx, "Kubernetes Client - %v", f.GetKubernesClient())
 
 	vars.KlientFactory = f
 }
 
-func SetIAMFactory(ctx context.Context, f interfaces.IAMFactoryIF) {
-	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetIAMFactory"), rctx.Context(rctx.StartTime, time.Now()))
+func SetServiceFactory(ctx context.Context, f interfaces.ServiceFactoryIF) {
+	ctx = rctx.BuildContext(ctx, rctx.Context(rctx.Component, "SetServiceFactory"), rctx.Context(rctx.StartTime, time.Now()))
 	defer logger.LogComponentTime(ctx)
 
 	logger.Infof(ctx, "Initializing IAM Factory")
@@ -73,9 +74,9 @@ func SetIAMFactory(ctx context.Context, f interfaces.IAMFactoryIF) {
 		panic(err)
 	}
 
-	logger.Debugf(ctx, "IAM - %v", f.GetIAMService())
-	logger.Debugf(ctx, "JWT - %v", f.GetJwtServer())
-	vars.IAMFactory = f
+	//	logger.Debugf(ctx, "IAM - %v", f.GetIAMService())
+	//	logger.Debugf(ctx, "JWT - %v", f.GetJwtServer())
+	vars.ServiceFactory = f
 }
 
 func SetAccessAuthorizerFactory(ctx context.Context, f interfaces.AccessAuthorizerFactoryIF) {
@@ -88,7 +89,7 @@ func SetAccessAuthorizerFactory(ctx context.Context, f interfaces.AccessAuthoriz
 		panic(err)
 	}
 
-	logger.Debugf(ctx, "Authorizer Service - %v", f.GetAccessAuthorizer())
+	//	logger.Debugf(ctx, "Authorizer Service - %v", f.GetAccessAuthorizer())
 	vars.AuthorizerFactory = f
 }
 
