@@ -14,8 +14,8 @@ var (
 type InstanceType string
 
 const (
-	ZCASH_INSTANCE InstanceType = "zcash"
-	LWD_INSTANCE   InstanceType = "lwd"
+	InstanceTypeZCASH InstanceType = "zcash"
+	InstanceTypeLWD   InstanceType = "lwd"
 )
 
 type ResourceLevelType string
@@ -29,123 +29,133 @@ const (
 type ResourceObjectType string
 
 const (
-	NAMESPACE_RESOURCE               ResourceObjectType = "Namespace"
-	DEPLOYMENT_RESOURCE              ResourceObjectType = "Deployment"
-	SERVICE_RESOURCE                 ResourceObjectType = "Service"
-	CONFIGMAP_RESOURCE               ResourceObjectType = "ConfigMap"
-	SECRET_RESOURCE                  ResourceObjectType = "Secret"
-	POD_RESOURCE                     ResourceObjectType = "Pod"
-	PERSISTENT_VOLUME_RESOURCE       ResourceObjectType = "PersistentVolume"
-	PERSISTENT_VOLUME_CLAIM_RESOURCE ResourceObjectType = "PersistentVolumeClaim"
-	VOLUME_SNAPHOT_RESOURCE          ResourceObjectType = "VolumeSnapshot"
-	SNAPSHOT_SCHEDULE_RESOURCE       ResourceObjectType = "SnapshotSchedule"
-	INGRESS_RESOURCE                 ResourceObjectType = "HTTPProxy"
+	ResourceNamespace             ResourceObjectType = "Namespace"
+	ResourceDeployment            ResourceObjectType = "Deployment"
+	ResourceService               ResourceObjectType = "Service"
+	ResourceConfigMap             ResourceObjectType = "ConfigMap"
+	ResourceSecret                ResourceObjectType = "Secret"
+	ResourcePod                   ResourceObjectType = "Pod"
+	ResourcePersistentVolume      ResourceObjectType = "PersistentVolume"
+	ResourcePersistentVolumeClaim ResourceObjectType = "PersistentVolumeClaim"
+	ResourceVolumeSnapshot        ResourceObjectType = "VolumeSnapshot"
+	ResourceVolumeSnapshotClass   ResourceObjectType = "VolumeSnapshotClass"
+	ResourceSnapshotSchedule      ResourceObjectType = "SnapshotSchedule"
+	ResourceHTTPProxy             ResourceObjectType = "HTTPProxy"
 )
 
 type NetworkType string
 
 const (
-	MAINNET_TYPE NetworkType = "mainnet"
-	TESTNET_TYPE NetworkType = "testnet"
+	NetworkTypeMain NetworkType = "mainnet"
+	NetworkTypeTest NetworkType = "testnet"
 )
 
 type Role string
 
 const (
-	ADMIN_ROLE Role = "admin"
-	OWNER_ROLE Role = "owner"
-	USER_ROLE  Role = "user"
+	RoleAdmin Role = "admin"
+	RoleOwner Role = "owner"
+	RoleUser  Role = "user"
 )
-
-// type TeamRole string
-
-// const (
-// 	TEAM_ADMIN_ROLE TeamRole = "admin"
-// 	TEAM_USER_ROLE  TeamRole = "user"
-// )
 
 type SubscriptionLevel string
 
 const (
-	NO_SUB_LEVEL      SubscriptionLevel = "none"
-	TEAM_MEMBER_LEVEL SubscriptionLevel = "team_member"
-	GOLD_LEVEL        SubscriptionLevel = "gold"
-	SILVER_LEVEL      SubscriptionLevel = "silver"
-	BRONZE_LEVEL      SubscriptionLevel = "bronze"
+	SubscriptionNone        SubscriptionLevel = "none"
+	SubscriptionTeamMember  SubscriptionLevel = "team_member"
+	SubscriptionGoldLevel   SubscriptionLevel = "gold"
+	SubscriptionSilverLevel SubscriptionLevel = "silver"
+	SubscriptionBronzeLevel SubscriptionLevel = "bronze"
 )
 
 type InvitationStatus string
 
 const (
-	NEW_INVITATION     InvitationStatus = "pending"
-	ACCEPT_INVITATION  InvitationStatus = "accepted"
-	REJECT_INVITATION  InvitationStatus = "rejected"
-	EXPIRED_INVITATION InvitationStatus = "expired"
+	InvitationPending InvitationStatus = "pending"
+	InvitationAccept  InvitationStatus = "accepted"
+	InvitationReject  InvitationStatus = "rejected"
+	InvitationExpired InvitationStatus = "expired"
 )
 
-type ZBIAction string
+type PlatformAction string
 
 const (
-	ACTION_CREATE ZBIAction = "create"
-	ACTION_UPDATE ZBIAction = "update"
-	ACTION_DELETE ZBIAction = "delete"
-	ACTION_REMOVE ZBIAction = "remove"
-	ACTION_ACCESS ZBIAction = "access"
+	PlatformResourceCreate PlatformAction = "create"
+	PlatformResourceUpdate PlatformAction = "update"
+	PlatformResourceDelete PlatformAction = "delete"
+	PlatformResourceRemove PlatformAction = "remove"
+	PlatformResourceAccess PlatformAction = "access"
 )
 
-type InstanceRequestIF interface {
-	GetName() string
-	GetVersion() string
-	GetInstanceType() InstanceType
-	AllowMethods() bool
-}
+type ZBIManagerAction string
 
-// type ObjectIF interface {
-// 	GetId() string
-// 	SetId(id string)
-// 	GetNetwork() NetworkType
-// 	GetOwner() string
-// 	SetOwner(owner string)
-// 	GetStatus() string
-// 	SetStatus(status string)
-// 	GetTimestamp() time.Time
-// 	SetTimestamp(tstamp time.Time)
-// }
+const (
+	CreateResourceAction ZBIManagerAction = "create"
+	UpdateResourceAction ZBIManagerAction = "update"
+	DeleteResourceAction ZBIManagerAction = "delete"
+	StopResourceAction   ZBIManagerAction = "stop"
+	StartResourceAction  ZBIManagerAction = "start"
+	RotateResourceAction ZBIManagerAction = "rotate"
+)
 
-type InstanceIF interface {
-	//	ObjectIF
-	GetName() string
-	GetProject() string
-	GetVersion() string
-	GetNetwork() NetworkType
-	GetOwner() string
-	GetInstanceType() InstanceType
+type ZBIBackupType string
 
-	//	SetProject(project string)
-	//	GetStatus() string
-	//	SetStatus(status string)
-	//	GetTimestamp() time.Time
-	//	SetTimestamp(tstamp time.Time)
-}
+const (
+	VolumeSnapshot ZBIBackupType = "snapshot"
+	BackupSchedule ZBIBackupType = "schedule"
+)
 
-type InstanceDetailIF interface {
-	// json.Marshaler
-	// json.Unmarshaler
-	// bson.Marshaler
-	// bson.Unmarshaler
-}
+type ZBIBackupScheduleType string
 
-// type ProjectSpecIF interface {
-// 	ProjectIF
-// 	GetProject() ProjectIF
-// }
+const (
+	DailySnapshotSchedule   ZBIBackupScheduleType = "daily"
+	WeeklySnapshotSchedule  ZBIBackupScheduleType = "weekly"
+	MonthlySnapshotSchedule ZBIBackupScheduleType = "monthly"
+)
 
-type InstanceSpecIF interface {
-	// InstanceIF
-	//	GetInstance() *Instance
-}
+type DataSourceType string
 
-type ResourceStateIF interface {
-	IsActive() bool
-	IsDeleted() bool
-}
+const (
+	NoDataSource       DataSourceType = "none"
+	VolumeDataSource   DataSourceType = "volume"
+	SnapshotDataSource DataSourceType = "snapshot"
+)
+
+type EventAction string
+
+const (
+	EventActionCreate         EventAction = "create"
+	EventActionDelete         EventAction = "delete"
+	EventActionUpdate         EventAction = "update"
+	EventActionResource       EventAction = "resource"
+	EventActionDeactivate     EventAction = "deactivate"
+	EventActionReactivate     EventAction = "reactivate"
+	EventActionRepair         EventAction = "repair"
+	EventActionSnapshot       EventAction = "snapshot"
+	EventActionSchedule       EventAction = "schedule"
+	EventActionPurge          EventAction = "purge"
+	EventActionStopInstance   EventAction = "stop"
+	EventActionStartInstance  EventAction = "start"
+	EventActionRotate         EventAction = "rotate"
+	EventActionUpdatePolicy   EventAction = "updatepolicy"
+	EventActionAddMember      EventAction = "addmember"
+	EventActionRemoveMember   EventAction = "removemember"
+	EventActionUpdateMember   EventAction = "updatemember"
+	EventActionRegister       EventAction = "register"
+	EventActionCreateKey      EventAction = "createkey"
+	EventActionDeleteKey      EventAction = "deletekey"
+	EventActionChangePassword EventAction = "changepassword"
+	EventActionChangeEmail    EventAction = "changeemail"
+	EventActionUpdateProfile  EventAction = "updateprofile"
+	EventActionAcceptInvite   EventAction = "acceptinvite"
+	EventActionRejectInvite   EventAction = "rejectinvite"
+	EventActionExpireInvite   EventAction = "expireinvite"
+)
+
+type StatusType string
+
+const (
+	StatusActive   StatusType = "active"
+	StatusStopped  StatusType = "stopped"
+	StatusInActive StatusType = "inactive"
+)
