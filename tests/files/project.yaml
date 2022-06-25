@@ -5,7 +5,7 @@ project:
       images:
       - name: authz
         version: v0.0.1 
-        url: jakinyele/zbi-authz-server:v0.0.1
+        url: jakinyele/authz-server:v0.0.1
         port: 50051
       templates:
         keys:
