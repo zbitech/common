@@ -63,6 +63,7 @@ func (m *MemoryStore) GetItem(id string) (interface{}, error) {
 		log.Printf("Retrieved object - %s - %v", utils.MarshalObject(item), item)
 		return item, nil
 	} else {
+		log.Printf("Item %s not found", id)
 		return nil, fmt.Errorf("Item %s does not exist", id)
 	}
 }
