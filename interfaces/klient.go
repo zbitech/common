@@ -3,55 +3,78 @@ package interfaces
 import (
 	"context"
 	"github.com/zbitech/common/pkg/model/entity"
+	"github.com/zbitech/common/pkg/model/k8s"
 	"github.com/zbitech/common/pkg/model/object"
 	"github.com/zbitech/common/pkg/model/ztypes"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/restmapper"
-
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 type KlientFactoryIF interface {
-	Init(ctx context.Context) error
+	Init(ctx context.Context, namespace string, rtypes ...ztypes.ResourceObjectType) error
 	GetZBIClient() ZBIClientIF
 	GetKubernesClient() KlientIF
+	StartInformer(ctx context.Context) error
+}
+
+type KlientInformerControllerIF interface {
+	AddInformer(ctx context.Context, rType ztypes.ResourceObjectType)
+	Run(ctx context.Context)
+	Close()
 }
 
 type ZBIClientIF interface {
 	RunInformer(ctx context.Context)
 
-	CreateProject(ctx context.Context, request *object.ProjectRequest) (*entity.Project, error)
-	CreateProjectIngress(ctx context.Context, project *entity.Project, instance *entity.Instance) error
+	//	CreateIngress(ctx context.Context, project *entity.Project, instance entity.InstanceIF) ([]entity.KubernetesResource, error)
+	//	UpdateControllerIngress(ctx context.Context, project *entity.Project, action string) ([]entity.KubernetesResource, error)
+	//	UpdateProjectIngress(ctx context.Context, project *entity.Project, instance entity.InstanceIF, action string) ([]entity.KubernetesResource, error)
+	GetStorageClasses(ctx context.Context) []k8s.StorageClass
+	GetSnapshotClasses(ctx context.Context) []k8s.SnapshotClass
 
-	UpdateProject(ctx context.Context, project *entity.Project, request *object.ProjectRequest) (*entity.Project, error)
+	ValidateProjectRequest(ctx context.Context, request *object.ProjectRequest) (bool, map[string]string)
+	CreateProject(ctx context.Context, request *object.ProjectRequest) (*entity.Project, error)
+	CreateProjectResources(ctx context.Context, project *entity.Project) ([]entity.KubernetesResource, error)
+
+	UpdateProject(ctx context.Context, project *entity.Project, request *object.ProjectRequest) error
 	DeleteProject(ctx context.Context, name string) error
 	GetAllProjects(ctx context.Context) ([]entity.Project, error)
 	GetProject(ctx context.Context, name string) (*entity.Project, error)
 	GetProjectsByOwner(ctx context.Context, owner string) ([]entity.Project, error)
 	GetProjectsByTeam(ctx context.Context, team string) ([]entity.Project, error)
-	GetProjectResources(ctx context.Context, name string) ([]entity.KubernetesResource, error)
+	GetProjectResources(ctx context.Context, project *entity.Project) ([]entity.KubernetesResource, error)
 
-	CreateInstance(ctx context.Context, project *entity.Project, request ztypes.InstanceRequestIF) (*entity.Instance, error)
-	UpdateInstance(ctx context.Context, project *entity.Project, instance *entity.Instance, request ztypes.InstanceRequestIF) (*entity.Instance, error)
-	DeleteInstance(ctx context.Context, projectName, instanceName string) error
+	ValidateInstanceRequest(ctx context.Context, project *entity.Project, request object.InstanceRequestIF) (bool, map[string]string)
+	CreateInstance(ctx context.Context, project *entity.Project, request object.InstanceRequestIF) (entity.InstanceIF, error)
+	UpdateInstance(ctx context.Context, project *entity.Project, instance entity.InstanceIF, request object.InstanceRequestIF) error
+	DeleteInstance(ctx context.Context, project *entity.Project, instance entity.InstanceIF) error
 
-	GetAllInstances(ctx context.Context) ([]entity.Instance, error)
-	GetInstancesByProject(ctx context.Context, projectName string) ([]entity.Instance, error)
-	GetInstancesByOwner(ctx context.Context, owner string) ([]entity.Instance, error)
-	GetInstanceByName(ctx context.Context, projectName, instanceName string) (*entity.Instance, error)
-	GetInstanceResources(ctx context.Context, project_name, instance_name string) ([]entity.KubernetesResource, error)
+	CreateInstanceResources(ctx context.Context, project *entity.Project, instance entity.InstanceIF) ([]entity.KubernetesResource, error)
+	StopInstance(ctx context.Context, project *entity.Project, instance entity.InstanceIF) error
+	StartInstance(ctx context.Context, project *entity.Project, instance entity.InstanceIF) ([]entity.KubernetesResource, error)
+	CreateInstanceBackup(ctx context.Context, instance entity.InstanceIF, req *object.SnapshotRequest) (*entity.KubernetesResource, error)
+	ScheduleInstanceBackup(ctx context.Context, instance entity.InstanceIF, req *object.SnapshotScheduleRequest) (*entity.KubernetesResource, error)
+	RotateInstanceCredentials(ctx context.Context, project *entity.Project, instance entity.InstanceIF) ([]entity.KubernetesResource, error)
+
+	GetAllInstances(ctx context.Context) ([]entity.InstanceIF, error)
+	GetInstancesByProject(ctx context.Context, project string) ([]entity.InstanceIF, error)
+	GetInstancesByOwner(ctx context.Context, owner string) ([]entity.InstanceIF, error)
+	GetInstanceByName(ctx context.Context, project, instance string) (entity.InstanceIF, error)
+
+	GetInstanceResources(ctx context.Context, project *entity.Project, instance entity.InstanceIF) ([]entity.KubernetesResource, error)
+	GetInstanceVolumes(ctx context.Context, instance entity.InstanceIF) []k8s.InstanceVolume
+	GetInstanceSnapshots(ctx context.Context, instance entity.InstanceIF) []k8s.Snapshot
+	GetInstanceSchedules(ctx context.Context, instance entity.InstanceIF) []k8s.SnapshotSchedule
+
+	GetResourceSummary(ctx context.Context) map[string]interface{}
+	GetProjectResourceSummary(ctx context.Context, project *entity.Project, extraLabels map[string]string) map[string]interface{}
+	GetInstanceResourceSummary(ctx context.Context, instance entity.InstanceIF, extraLabels map[string]string) map[string]interface{}
 }
 
 type KlientIF interface {
-	GetMapper() *restmapper.DeferredDiscoveryRESTMapper
-	GetGVR(gvk schema.GroupVersionKind) (*schema.GroupVersionResource, error)
-
-	GetResource(object *unstructured.Unstructured) *entity.KubernetesResource
-	GenerateKubernetesObjects(ctx context.Context, spec_arr []string) ([]*unstructured.Unstructured, []*schema.GroupVersionKind, error)
-
 	DeleteDynamicResource(ctx context.Context, namespace, name string, resource schema.GroupVersionResource) error
 	DeleteNamespace(ctx context.Context, namespace string) error
 
@@ -67,8 +90,11 @@ type KlientIF interface {
 	GetStorageClass(ctx context.Context, name string) (*storagev1.StorageClass, error)
 	GetStorageClasses(ctx context.Context) ([]storagev1.StorageClass, error)
 
+	GetSnapshotClass(ctx context.Context, name string) (*unstructured.Unstructured, error)
+	GetSnapshotClasses(ctx context.Context) ([]unstructured.Unstructured, error)
+
 	GetDeploymentByName(ctx context.Context, namespace, name string) (*appsv1.Deployment, error)
-	GetDeployments(ctx context.Context, namespace string, labels map[string]string) ([]appsv1.Deployment, error)
+	GetDeployments(ctx context.Context, namespace string, labels map[string]string) []appsv1.Deployment
 
 	GetPodByName(ctx context.Context, namespace, name string) (*corev1.Pod, error)
 	GetPods(ctx context.Context, namespace string, labels map[string]string) ([]corev1.Pod, error)
@@ -88,11 +114,11 @@ type KlientIF interface {
 	GetPersistentVolumeClaimByName(ctx context.Context, namespace, name string) (*corev1.PersistentVolumeClaim, error)
 	GetPersistentVolumeClaims(ctx context.Context, namespace string, labels map[string]string) ([]corev1.PersistentVolumeClaim, error)
 
-	GetVolumeSnapshot(ctx context.Context, namespace, name string) (*unstructured.Unstructured, error)
-	GetVolumeSnapshots(ctx context.Context, namespace string, labels map[string]string) ([]unstructured.Unstructured, error)
+	GetVolumeSnapshot(ctx context.Context, namespace, name string) (*k8s.VolumeSnapshot, error)
+	GetVolumeSnapshots(ctx context.Context, namespace string, labels map[string]string) []k8s.VolumeSnapshot
 
 	GetSnapshotSchedule(ctx context.Context, namespace, name string) (*unstructured.Unstructured, error)
-	GetSnapshotSchedules(ctx context.Context, namespace string, labels map[string]string) ([]unstructured.Unstructured, error)
+	GetSnapshotSchedules(ctx context.Context, namespace string, labels map[string]string) []unstructured.Unstructured
 
 	GetIngress(ctx context.Context, namespace, name string) (*unstructured.Unstructured, error)
 }
