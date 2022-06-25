@@ -27,7 +27,7 @@ func GenerateUserName() string {
 }
 
 func GenerateSecurePassword() string {
-	passwd, err := password.Generate(16, 4, 4, false, false)
+	passwd, err := password.Generate(12, 4, 0, false, false)
 	if err != nil {
 		return "password"
 	}
